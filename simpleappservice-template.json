@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+         "linuxFxVersion": {
+            "type": "string",
+             "defaultValue": "NODE|14"            
+        }
+        
+       },
+       
+    
+
+    
+
+    "resources": [
+
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-03-01",
+            "location": "East US",
+            "name": "TA-appservplan",
+            "sku": {
+                "name": "S1"
+            },
+            "kind": "linux",
+            "properties": {
+                "reserved": true
+            }
+
+        },
+
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-03-01",
+            "location": "East US",
+            "name": "TA-appserv",
+            "properties": {
+                "httpsOnly": true,
+                "serverFarmId": "TA-appservplan",
+                "siteConfig":{
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
+            }
+                   
+             },
+            
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            
+            "dependsOn": [
+                "TA-appservplan"
+    ]
+        }
+    ]
+
+}
